@@ -3,17 +3,16 @@ using System.Text.Json.Serialization;
 
 namespace homework2.OpenWeather
 {
-	public abstract class Coord
+	public class Coord
 	{
-
 		[JsonPropertyName("lon")]
 		public double Longitude { get; set; }
-		
+
 		[JsonPropertyName("lat")]
 		public double Lattitude { get; set; }
 	}
 
-	public abstract class Weather
+	public class Weather
 	{
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
@@ -22,7 +21,7 @@ namespace homework2.OpenWeather
 		public string IconCode { get; set; }
 	}
 
-	public abstract class Main
+	public class Main
 	{
 		[JsonPropertyName("temp")]
 		public double TemperatureKelvin { get; set; }
@@ -31,7 +30,7 @@ namespace homework2.OpenWeather
 		public double FeelsLikeKelvin { get; set; }
 	}
 
-	public abstract class CurrentWeatherDto
+	public class CurrentWeatherDto
 	{
 		[JsonPropertyName("coord")]
 		public Coord Coord { get; set; }
