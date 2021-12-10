@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Runtime.Caching;
 using System.Text.Json;
@@ -17,26 +16,26 @@ namespace homework2.OpenWeather
 		// const string iconUrlTemplate = "http://openweathermap.org/img/w/{0}.png";
 
 		private readonly ObjectCache _cache = MemoryCache.Default;
-		private readonly CacheItemPolicy _policy = new CacheItemPolicy();
-		//private readonly Dictionary<string, CurrentWeatherDto> _cache = new Dictionary<string, CurrentWeatherDto>();
 
 		public async ValueTask<CurrentWeatherDto> GetWeatherAsync(string cityName)
 		{
 			var lowerCasedCityName = cityName.ToLower();
 
-			if (_cache[lowerCasedCityName] is not CurrentWeatherDto currentWeatherDto)
-			{
-				var currentWeatherUrl = string.Format(UrlTemplate, lowerCasedCityName, ApiKey, DefaultLanguage);
-				var httpClient = new HttpClient();
+			if ((_cache[lowerCasedCityName] is CurrentWeatherDto currentWeatherDto)) return currentWeatherDto;
+			var currentWeatherUrl = string.Format(UrlTemplate, lowerCasedCityName, ApiKey, DefaultLanguage);
+			var httpClient = new HttpClient();
 
-				var response = await httpClient.GetAsync(currentWeatherUrl);
-				if (!response.IsSuccessStatusCode)
-					throw new Exception($"OpenWeatherMap response has a fault code {response.StatusCode}");
-				var currentWeatherJson = await response.Content.ReadAsStringAsync();
-				var currentWeatherDocument = JsonDocument.Parse(currentWeatherJson);
-				currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
-				_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException(), _policy);
-			}
+			var response = await httpClient.GetAsync(currentWeatherUrl);
+			if (!response.IsSuccessStatusCode)
+				throw new Exception($"OpenWeatherMap response has a fault code {response.StatusCode}");
+			var currentWeatherJson = await response.Content.ReadAsStringAsync();
+			var currentWeatherDocument = JsonDocument.Parse(currentWeatherJson);
+			currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
+			var policy = new CacheItemPolicy()
+			{
+				AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+			};
+			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException(), policy);
 			return currentWeatherDto;
 		}
 	}
