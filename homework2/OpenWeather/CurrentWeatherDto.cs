@@ -5,12 +5,12 @@ namespace homework2.OpenWeather
 {
 	public abstract class Coord
 	{
-		protected Coord(double lattitude)
-		{
-		}
 
 		[JsonPropertyName("lon")]
 		public double Longitude { get; set; }
+		
+		[JsonPropertyName("lat")]
+		public double Lattitude { get; set; }
 	}
 
 	public abstract class Weather
