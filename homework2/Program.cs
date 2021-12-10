@@ -1,5 +1,17 @@
-﻿// See https://aka.ms/new-console-template for more information
+using homework2.OpenWeather;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-using System;
+// Build application
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+builder.Services.AddSingleton<OpenWeatherClient>();
 
-Console.WriteLine("Hello, World!");
+// Middleware
+var app = builder
+	.Build();
+
+app.UseRouting();
+app.UseEndpoints(endpointRouteBuilder => endpointRouteBuilder.MapControllers());
+
+app.Run();
