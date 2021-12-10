@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using System.Runtime.Caching;
 
 namespace homework2.OpenWeather
 {
@@ -17,30 +15,29 @@ namespace homework2.OpenWeather
 		// Will be used later
 		// const string iconUrlTemplate = "http://openweathermap.org/img/w/{0}.png";
 
-		//private readonly Dictionary<string, CurrentWeatherDto> _cache = new Dictionary<string, CurrentWeatherDto>();
-		private readonly ObjectCache _cache = MemoryCache.Default;
-		private readonly CacheItemPolicy _policy = new CacheItemPolicy();
+		private readonly Dictionary<string, CurrentWeatherDto> _cache = new Dictionary<string, CurrentWeatherDto>();
 
 		public async ValueTask<CurrentWeatherDto> GetWeatherAsync(string cityName)
 		{
 			var lowerCasedCityName = cityName.ToLower();
 
-			if (_cache[lowerCasedCityName] is not string fileContents)
+			if (_cache.ContainsKey(lowerCasedCityName))
 			{
-				var currentWeatherUrl = string.Format(UrlTemplate, lowerCasedCityName, ApiKey, DefaultLanguage);
-				var httpClient = new HttpClient();
-				
-				var response = await httpClient.GetAsync(currentWeatherUrl);
-				if (!response.IsSuccessStatusCode)
-					throw new Exception($"OpenWeatherMap response has a fault code {response.StatusCode}");
-				fileContents =  await response.Content.ReadAsStringAsync();
-				_cache.Set(lowerCasedCityName, fileContents, _policy);
+				return _cache[lowerCasedCityName];
 			}
-			var currentWeatherDocument = JsonDocument.Parse(fileContents);
-			var currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
-			
-			return currentWeatherDto;
 
+			var currentWeatherUrl = string.Format(UrlTemplate, lowerCasedCityName, ApiKey, DefaultLanguage);
+			var httpClient = new HttpClient();
+
+			var response = await httpClient.GetAsync(currentWeatherUrl);
+			if (!response.IsSuccessStatusCode)
+				throw new Exception($"Openweathermap response has a fault code {response.StatusCode}");
+			var currentWeatherJson = await response.Content.ReadAsStringAsync();
+
+			var currentWeatherDocument = JsonDocument.Parse(currentWeatherJson);
+			var currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
+			_cache[lowerCasedCityName] = currentWeatherDto;
+			return currentWeatherDto;
 		}
 	}
 }
