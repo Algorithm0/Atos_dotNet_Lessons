@@ -21,7 +21,9 @@ namespace homework2.OpenWeather
 		{
 			var lowerCasedCityName = cityName.ToLower();
 
+			//если находятся данные по ключу данного города, то вернуть их
 			if ((_cache[lowerCasedCityName] is CurrentWeatherDto currentWeatherDto)) return currentWeatherDto;
+			
 			var currentWeatherUrl = string.Format(UrlTemplate, lowerCasedCityName, ApiKey, DefaultLanguage);
 			var httpClient = new HttpClient();
 
@@ -31,11 +33,14 @@ namespace homework2.OpenWeather
 			var currentWeatherJson = await response.Content.ReadAsStringAsync();
 			var currentWeatherDocument = JsonDocument.Parse(currentWeatherJson);
 			currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
+			
+			//обновляем политику, указываем, что через сейчас+10мин запись должна быть удалена
 			var policy = new CacheItemPolicy()
 			{
 				AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
 			};
-			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException(), policy);
+			//добавление записи в cache с обработкой исключения на NULL
+			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException("Getting Date from API is NULL"), policy);
 			return currentWeatherDto;
 		}
 	}
