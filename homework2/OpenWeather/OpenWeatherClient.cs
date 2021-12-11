@@ -37,7 +37,7 @@ namespace homework2.OpenWeather
 			//обновляем политику, указываем, что через сейчас+10мин запись должна быть удалена
 			var policy = new CacheItemPolicy()
 			{
-				AbsoluteExpiration = DateTimeOffset.Now.AddMinutes(10)
+				AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10)
 			};
 			//добавление записи в cache с обработкой исключения на NULL
 			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException("Getting Date from API is NULL"), policy);
