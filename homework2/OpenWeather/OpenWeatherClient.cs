@@ -16,6 +16,7 @@ namespace homework2.OpenWeather
 		// const string iconUrlTemplate = "http://openweathermap.org/img/w/{0}.png";
 
 		private readonly ObjectCache _cache = MemoryCache.Default;
+		private readonly CacheItemPolicy _policy = new CacheItemPolicy();
 
 		public async ValueTask<CurrentWeatherDto> GetWeatherAsync(string cityName)
 		{
@@ -35,12 +36,11 @@ namespace homework2.OpenWeather
 			currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
 			
 			//обновляем политику, указываем, что через сейчас+10мин запись должна быть удалена
-			var policy = new CacheItemPolicy()
-			{
-				AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10)
-			};
+			_policy.AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10);
+			
 			//добавление записи в cache с обработкой исключения на NULL
-			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException("Getting Date from API is NULL"), policy);
+			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException("Getting Date from API is NULL"), _policy);
+
 			return currentWeatherDto;
 		}
 	}
