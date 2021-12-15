@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Net.Http;
-using System.Runtime.Caching;
+//using System.Runtime.Caching;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace homework2.OpenWeather
 {
@@ -15,15 +16,33 @@ namespace homework2.OpenWeather
 		// Will be used later
 		// const string iconUrlTemplate = "http://openweathermap.org/img/w/{0}.png";
 
-		private readonly ObjectCache _cache = MemoryCache.Default;
-		private readonly CacheItemPolicy _policy = new CacheItemPolicy();
+		//old
+		// private readonly ObjectCache _cache = MemoryCache.Default;
+		// private readonly CacheItemPolicy _policy = new CacheItemPolicy();
+
+		//new
+		public OpenWeatherClient()
+		{
+			var options = new MemoryCacheOptions();
+			_cache = new MemoryCache(options);
+		}
+		private readonly MemoryCache _cache;
+		private readonly MemoryCacheEntryOptions _policy = new()
+		{
+			AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+		};
 
 		public async ValueTask<CurrentWeatherDto> GetWeatherAsync(string cityName)
 		{
 			var lowerCasedCityName = cityName.ToLower();
 
 			//если находятся данные по ключу данного города, то вернуть их
-			if ((_cache[lowerCasedCityName] is CurrentWeatherDto currentWeatherDto)) return currentWeatherDto;
+			//old
+			//if ((_cache[lowerCasedCityName] is CurrentWeatherDto currentWeatherDto)) return currentWeatherDto;
+			
+			//new
+			if (_cache.Get(lowerCasedCityName) is CurrentWeatherDto currentWeatherDto)
+				return currentWeatherDto;
 			
 			var currentWeatherUrl = string.Format(UrlTemplate, lowerCasedCityName, ApiKey, DefaultLanguage);
 			var httpClient = new HttpClient();
@@ -36,7 +55,8 @@ namespace homework2.OpenWeather
 			currentWeatherDto = currentWeatherDocument.Deserialize<CurrentWeatherDto>();
 			
 			//обновляем политику, указываем, что через сейчас+10мин запись должна быть удалена
-			_policy.AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10);
+			//old
+			//_policy.AbsoluteExpiration = DateTimeOffset.UtcNow.AddMinutes(10);
 			
 			//добавление записи в cache с обработкой исключения на NULL
 			_cache.Set(lowerCasedCityName, currentWeatherDto ?? throw new InvalidOperationException("Getting Date from API is NULL"), _policy);
