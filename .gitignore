@@ -1,7 +1,11 @@
 # default .gitignore top level for Rider
-
 bin/
 obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+
+# User specific
+**/.idea/.idea.**.dir/.idea/encodings.xml
+**/.idea/.idea.**.dir/.idea/workspace.xml
+**/.idea/.idea.**.dir/.idea/tasks.xml
