@@ -1,29 +1,7 @@
-# Common IntelliJ Platform excludes
+# default .gitignore top level for Rider
 
-# User specific
-**/.idea/**/workspace.xml
-**/.idea/**/tasks.xml
-**/.idea/shelf/*
-**/.idea/dictionaries
-**/.idea/httpRequests/
-
-# Rider
-# Rider auto-generates .iml files, and contentModel.xml
-**/.idea/**/*.iml
-**/.idea/**/contentModel.xml
-**/.idea/**/modules.xml
-
-*.suo
-*.user
-.vs/
-[Bb]in/
-[Oo]bj/
-_UpgradeReport_Files/
-[Pp]ackages/
-
-Thumbs.db
-Desktop.ini
-.DS_Store
-
+bin/
+obj/
+/packages/
 riderModule.iml
 /_ReSharper.Caches/

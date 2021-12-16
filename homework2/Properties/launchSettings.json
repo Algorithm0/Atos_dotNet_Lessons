@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "WeatherClientWeb": {
+      "launchUrl": "weather?city=Voronezh",
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:7175;http://localhost:5175",
+      "dotnetRunMessages": true
+    }
+  }
+}

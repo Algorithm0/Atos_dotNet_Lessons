@@ -1,5 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homework2", "homework2\homework2.csproj", "{01538B0E-442C-4831-9352-8867748EFEE2}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "homework1", "homework1\homework1.csproj", "{79E111CC-98C4-40D6-B830-8B5B194E882F}"
 EndProject
 Global
@@ -8,6 +10,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01538B0E-442C-4831-9352-8867748EFEE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01538B0E-442C-4831-9352-8867748EFEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01538B0E-442C-4831-9352-8867748EFEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01538B0E-442C-4831-9352-8867748EFEE2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79E111CC-98C4-40D6-B830-8B5B194E882F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79E111CC-98C4-40D6-B830-8B5B194E882F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79E111CC-98C4-40D6-B830-8B5B194E882F}.Release|Any CPU.ActiveCfg = Release|Any CPU
