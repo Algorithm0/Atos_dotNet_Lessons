@@ -11,5 +11,7 @@ namespace homework3.DataAccess.Entity
 		
 		public int UserId { get; set; }
 		public User User { get; set; }
+		public int NumberRoom { get; set; }
+		public Room Room { get; set; }
 	}
 }

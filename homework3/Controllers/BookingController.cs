@@ -37,15 +37,23 @@ namespace homework3.Controllers
 				return BadRequest("FromUtc cannot be empty");
 			if (bookingDto.ToUtc == default)
 				return BadRequest("ToUtc cannot be empty");
+			if (bookingDto.NumberRoom == default)
+				return BadRequest("NumberRoom cannot be empty");
 
 			User user = await _bookingContext
 				.Users
 				.FirstOrDefaultAsync(u => u.UserName == bookingDto.Username);
 			if (user is null)
 				return BadRequest($"User with name '{bookingDto.Username}' cannot be found");
+			
+			Room room = await _bookingContext
+				.Rooms
+				.FirstOrDefaultAsync(r => r.NumberRoom == bookingDto.NumberRoom);
+			if (room is null)
+				return BadRequest($"Room with number '{bookingDto.NumberRoom}' cannot be found");
 
 			Booking newBooking = bookingDto
-				.ToBooking(userId: user.Id);
+				.ToBooking(userId: user.Id, numberRoom: room.NumberRoom);
 			var alreadyCreatedBooking = await _bookingContext
 				.Bookings
 				.FirstOrDefaultAsync(b =>

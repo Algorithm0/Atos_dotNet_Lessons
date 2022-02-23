@@ -9,15 +9,17 @@ namespace homework3.Dto
 		public DateTime FromUtc { get; set; }
 		public DateTime ToUtc { get; set; }
 		public string Comment { get; set; }
+		public int NumberRoom { get; set; }
 
-		public Booking ToBooking(int userId)
+		public Booking ToBooking(int userId, int numberRoom)
 		{
 			return new Booking
 			{
 				UserId = userId,
 				FromUtc = DateTime.SpecifyKind(FromUtc, DateTimeKind.Utc),
 				ToUtc = DateTime.SpecifyKind(ToUtc, DateTimeKind.Utc),
-				Comment = Comment
+				Comment = Comment,
+				NumberRoom = numberRoom
 			};
 		}
 
@@ -28,7 +30,8 @@ namespace homework3.Dto
 				Comment = booking.Comment,
 				FromUtc = booking.FromUtc,
 				ToUtc = booking.ToUtc,
-				Username = booking.User.UserName
+				Username = booking.User.UserName,
+				NumberRoom = booking.NumberRoom
 			};
 		}
 	}

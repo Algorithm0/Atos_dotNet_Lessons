@@ -12,3 +12,7 @@ riderModule.iml
 
 # Remove all local docker data
 docker-data/
+
+# Remove auto-generated migrations
+Migrations/
+
