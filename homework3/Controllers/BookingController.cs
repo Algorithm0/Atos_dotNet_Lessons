@@ -25,7 +25,7 @@ namespace homework3.Controllers
 			var bookings = await _bookingContext.Bookings
 				.Include(b => b.User)
 				.ToArrayAsync(cancellationToken);
-			return Ok(bookings.Select(b => BookingDto.FromBooking(b)));
+			return Ok(bookings.Select(b => BookingDto.FromBookingAndRoomNum(b, b.Rooms.Count > 0 ? b.Rooms.First().Number : -1)));
 		}
 
 		[HttpPost]
@@ -48,12 +48,12 @@ namespace homework3.Controllers
 			
 			Room room = await _bookingContext
 				.Rooms
-				.FirstOrDefaultAsync(r => r.NumberRoom == bookingDto.NumberRoom);
+				.FirstOrDefaultAsync(r => r.Number == bookingDto.NumberRoom);
 			if (room is null)
 				return BadRequest($"Room with number '{bookingDto.NumberRoom}' cannot be found");
 
 			Booking newBooking = bookingDto
-				.ToBooking(userId: user.Id, numberRoom: room.NumberRoom);
+				.ToBooking(userId: user.Id);
 			var alreadyCreatedBooking = await _bookingContext
 				.Bookings
 				.FirstOrDefaultAsync(b =>
@@ -69,10 +69,13 @@ namespace homework3.Controllers
 				return BadRequest("Cannot have from date earlier than now");
 			if (newBooking.ToUtc - newBooking.FromUtc <= TimeSpan.FromMinutes(30))
 				return BadRequest("Booking period should be at lease 30 minutes long");
-
+			
+			newBooking.Rooms.Add(room);
 			_bookingContext.Add(newBooking);
+			// room.Bookings.Add(newBooking);
+			// _bookingContext.Update(room);
 			await _bookingContext.SaveChangesAsync();
-			return Ok(BookingDto.FromBooking(newBooking));
+			return Ok(BookingDto.FromBookingAndRoomNum(newBooking, bookingDto.NumberRoom));
 		}
 	}
 }

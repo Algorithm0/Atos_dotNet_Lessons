@@ -18,12 +18,23 @@ namespace homework3.DataAccess
 				.WithMany(u => u.Bookings)
 				.HasForeignKey(b => b.UserId)
 				.IsRequired(true);
-			
+
 			modelBuilder.Entity<Booking>()
-				.HasOne(x => x.Room)
+				.HasMany<Room>(x => x.Rooms)
 				.WithMany(u => u.Bookings)
-				.HasForeignKey(b => b.NumberRoom)
-				.IsRequired(true);
+				.UsingEntity(cs =>
+				{
+					// cs.MapLeftKey("Booking");
+					// cs.MapRightKey("Room");
+					//cs.HasAlternateKey("BookingID", "RoomNum");
+					cs.ToTable("BookingRoom");
+				});
+			
+			// modelBuilder.Entity<Booking>()
+			// 	.HasOne(x => x.Room)
+			// 	.WithMany(u => u.Bookings)
+			// 	.HasForeignKey(b => b.NumberRoom)
+			// 	.IsRequired(true);
 
 			modelBuilder.Entity<Booking>()
 				.Property(b => b.FromUtc)

@@ -21,7 +21,7 @@ namespace homework3.Controllers
         {
             Room roomInDb = await _bookingContext
                 .Rooms
-                .FirstOrDefaultAsync(r => r.NumberRoom == room.NumberRoom);
+                .FirstOrDefaultAsync(r => r.Number == room.Number);
 
             if (roomInDb != null)
                 return Conflict("A room with this number already exists");
