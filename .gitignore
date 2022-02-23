@@ -9,3 +9,6 @@ riderModule.iml
 **/.idea/.idea.**.dir/.idea/encodings.xml
 **/.idea/.idea.**.dir/.idea/workspace.xml
 **/.idea/.idea.**.dir/.idea/tasks.xml
+
+# Remove all local docker data
+docker-data/
